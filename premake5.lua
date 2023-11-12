@@ -1,9 +1,20 @@
 workspace "Box2DWS"
 	configurations { "Debug", "Release", "Dist" }
+	platforms { "Win32", "x64" }
+
 	outputdir = "Debug-x64"
+
+	filter { "platforms:Win32" }
+    system "Windows"
+    architecture "x86"
+
+filter { "platforms:ARM" }
+    system "Windows"
+    architecture "x64"
 
 project "Box2D"
 	kind "StaticLib"
+	--architecture "x64"
 	language "C++"
 	cppdialect "C++11"
 	staticruntime "off"
