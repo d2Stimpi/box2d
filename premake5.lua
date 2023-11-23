@@ -1,51 +1,43 @@
-workspace "Box2DWS"
-	configurations { "Debug", "Release", "Dist" }
-	platforms { "Win32", "x64" }
-
-	outputdir = "Debug-x64"
-
-	filter { "platforms:Win32" }
-    system "Windows"
-    architecture "x86"
-
-filter { "platforms:ARM" }
-    system "Windows"
-    architecture "x64"
-
+-- Box2D
 project "Box2D"
 	kind "StaticLib"
-	--architecture "x64"
+	architecture "x64"
 	language "C++"
-	cppdialect "C++11"
-	staticruntime "off"
 	
-	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
-	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+	targetdir ("../../../bin/" .. outputdir .. "/%{prj.name}")
+	objdir ("../../../bin-int/" .. outputdir .. "/%{prj.name}")
 	
 	files
 	{ 
-		"src/**.h",
-		"src/**.cpp",
-		"include/**.h" 
+		"../%{prj.name}/src/**.h",
+		"../%{prj.name}/src/**.cpp",
+		"../%{prj.name}/include/**.h"
 	}
-	
+
 	includedirs
 	{
-		"include",
-		"src"
+		"../%{prj.name}/include"
 	}
 	
 	filter "system:windows"
+		cppdialect "C++17"
+		staticruntime "Off"
 		systemversion "latest"
 	
-	filter "configurations.Debug"
-		runtime "Debug"
-		symbols "on"
+	filter "configurations:Debug"
+		defines "DEBUG"
+		symbols "On"
 	
-	filter "configurations.Release"
-		runtime "Release"
-		optimize "on"
+	filter "configurations:Release"
+		defines "NDEBUG"
+		optimize "On"
 		
-	filter "configurations.Dist"
-		runtime "Release"
-		optimize "on"
+	filter "configurations:Dist"
+		defines "NDEBUG"
+		optimize "On"
+
+	filter { "system:windows", "configurations:Release" }
+		buildoptions "/MD"
+		
+	filter { "system:windows", "configurations:Debug" }
+		buildoptions "/MDd"
